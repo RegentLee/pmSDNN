@@ -9,20 +9,21 @@ class pmSDNN:
         if range_size is None:
             range_size = window_size - 1
 
-        input_size = pattern.shape[1]*range_size*(window_size - range_size - 1) + 1
+        input_size = pattern.shape[1]*range_size*(2*window_size - range_size - 1) + 1
 
         sd = SelectiveDesensitization(pattern, window_size, range_size)
         fc = FullyConnected(input_size, pattern.shape[1])
         activation_func = SGN()
         loss_func = PotentialLoss()
 
+        self.pattern = pattern
         self.layers = [sd, fc, activation_func]
         self.loss_func = loss_func
 
     def forward(self, x, t):
         for layer in self.layers:
             x = layer.forward(x)
-        loss = self.loss_func.forward(x, t)
+        loss = self.loss_func.forward(x, self.pattern[t])
         return loss
 
     def backward(self):

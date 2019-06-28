@@ -38,7 +38,7 @@ class SelectiveDesensitization:
 
         return sd
 
-    def backward(self):
+    def backward(self, dy):
         pass
 
 

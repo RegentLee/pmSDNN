@@ -3,7 +3,47 @@ import numpy as np
 
 
 class SelectiveDesensitization:
-    def __init__(self):
+    def __init__(self, pattern, window_size, range_size=None):
+        if range_size is not None and 2*window_size - 1 < range_size:
+            raise ValueError('Range Size is over')
+        if range_size is None:
+            range_size = window_size - 1
+
+        #ランダムパターンを作る
+        pattern_size = pattern.shape
+        random_pattern = np.empty((window_size, pattern_size[0], pattern_size[1]), dtype='int8')
+        idx = np.arange(pattern_size[1])
+
+        for i in window_size:
+            np.random.shuffle(idx)
+            random_pattern[i] = np.copy(pattern[idx])
+
+        self.p = pattern
+        self.rp = random_pattern
+        self.ws = window_size
+        self.rs = range_size
+
+    def forward(self, contexts):
+        sd = np.ones((len(contexts), 1))
+        for i in range(self.ws - 1):
+            for j in range(i + 1, min(i + 1 + self.rs, self.ws)):
+                in0 = self.p[contexts[:, i]]
+                in1 = self.p[contexts[:, j]]
+
+                in0r = self.rp[contexts[:, i]]
+                in1r = self.rp[contexts[:, j]]
+
+                sd0 = (1 + in1r) * in0
+                sd1 = (1 + in0r) * in1
+
+                sd0 = np.where((sd0 == 1) | (sd0 == -1), 0, sd0 / 2)
+                sd1 = np.where((sd1 == 1) | (sd1 == -1), 0, sd1 / 2)
+
+                sd = np.hstack((sd, sd0, sd1))
+
+        return sd
+
+    def backward(self):
         pass
 
 

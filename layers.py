@@ -24,4 +24,24 @@ class FullyConnected:
 
 class SGN:
     def __init__(self):
-        pass
+        self.y = None
+
+    def forward(self, x):
+        self.y = np.where(x < 0, -1, 1)
+        return self.y
+
+    def backward(self, dy):
+        return dy
+
+
+class PotentialLoss:
+    def __init__(self):
+        self.loss = None
+
+    def forward(self, y, t):
+        output_size = t.shape
+        self.loss = (y - t) / 2
+        return np.sum(np.abs(self.loss)) / (output_size[0]*output_size[1])
+
+    def backward(self):
+        return self.loss

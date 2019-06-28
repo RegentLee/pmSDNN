@@ -8,8 +8,18 @@ class SelectiveDesensitization:
 
 
 class FullyConnected:
-    def __init__(self):
-        pass
+    def __init__(self, input_size, output_size):
+        self.x = None
+        self.W = 0.01 * np.random.randn(input_size, output_size).astype('f')
+
+    def forward(self, x):
+        self.x = x
+        y = np.dot(self.x, self.W)
+        return y
+
+    def backward(self, dy):
+        grads = np.dot(self.x.T, dy)
+        self.W -= grads
 
 
 class SGN:

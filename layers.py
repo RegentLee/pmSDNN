@@ -30,8 +30,8 @@ class SelectiveDesensitization:
                 in0 = self.p[contexts[:, i]]
                 in1 = self.p[contexts[:, j]]
 
-                in0r = self.rp[contexts[:, i]]
-                in1r = self.rp[contexts[:, j]]
+                in0r = self.rp[i][contexts[:, i]]
+                in1r = self.rp[j][contexts[:, j]]
 
                 sd0 = (1 + in1r) * in0
                 sd1 = (1 + in0r) * in1

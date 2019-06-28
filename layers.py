@@ -9,9 +9,9 @@ class SelectiveDesensitization:
         random_pattern = np.empty((window_size, pattern_size[0], pattern_size[1]), dtype='int8')
         idx = np.arange(pattern_size[1])
 
-        for i in window_size:
+        for i in range(window_size):
             np.random.shuffle(idx)
-            random_pattern[i] = np.copy(pattern[idx])
+            random_pattern[i] = np.copy(pattern[:, idx])
 
         self.p = pattern
         self.rp = random_pattern

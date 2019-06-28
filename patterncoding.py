@@ -11,7 +11,7 @@ class PatternCoding:
     def pattern_coding(self):
         print('Making Pattern...')
 
-        pattern = np.zeros((self.n, self.p))
+        pattern = np.zeros((self.n, self.p), dtype='int8')
 
         # 0コ目
         pattern[0][: self.p//2] = 1

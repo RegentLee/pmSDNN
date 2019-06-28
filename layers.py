@@ -3,12 +3,7 @@ import numpy as np
 
 
 class SelectiveDesensitization:
-    def __init__(self, pattern, window_size, range_size=None):
-        if range_size is not None and 2*window_size - 1 < range_size:
-            raise ValueError('Range Size is over')
-        if range_size is None:
-            range_size = window_size - 1
-
+    def __init__(self, pattern, window_size, range_size):
         #ランダムパターンを作る
         pattern_size = pattern.shape
         random_pattern = np.empty((window_size, pattern_size[0], pattern_size[1]), dtype='int8')

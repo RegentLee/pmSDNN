@@ -3,15 +3,15 @@ from layers import SelectiveDesensitization, FullyConnected, SGN, PotentialLoss
 
 
 class pmSDNN:
-    def __init__(self, pattern, window_size, range_size=None):
-        if range_size is not None and window_size - 1 < range_size:
-            raise ValueError('Range Size is over')
-        if range_size is None:
-            range_size = window_size - 1
+    def __init__(self, pattern, input_num, range_num=None):
+        if range_num is not None and input_num - 1 < range_num:
+            raise ValueError('range_num is over input_num - 1')
+        if range_num is None:
+            range_num = input_num - 1
 
-        input_size = pattern.shape[1]*range_size*(2*window_size - range_size - 1) + 1
+        input_size = pattern.shape[1] * range_num * (2 * input_num - range_num - 1) + 1
 
-        sd = SelectiveDesensitization(pattern, window_size, range_size)
+        sd = SelectiveDesensitization(pattern, input_num, range_num)
         fc = FullyConnected(input_size, pattern.shape[1])
         activation_func = SGN()
         loss_func = PotentialLoss()

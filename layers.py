@@ -28,11 +28,11 @@ class SelectiveDesensitization:
                 in0r = self.rp[i][contexts[:, i]]
                 in1r = self.rp[j][contexts[:, j]]
 
-                sd0 = (1 + in1r) * in0
-                sd1 = (1 + in0r) * in1
+                sd0 = ((1 + in1r)//2) * in0
+                sd1 = ((1 + in0r)//2) * in1
 
-                sd0 = np.where((sd0 == 1) | (sd0 == -1), 0, sd0 / 2)
-                sd1 = np.where((sd1 == 1) | (sd1 == -1), 0, sd1 / 2)
+                # sd0 = np.where((sd0 == 1) | (sd0 == -1) | (sd0 == 0), 0, sd0 / 2)
+                # sd1 = np.where((sd1 == 1) | (sd1 == -1) | (sd0 == 0), 0, sd1 / 2)
 
                 sd = np.hstack((sd, sd0, sd1))
 

@@ -3,20 +3,20 @@ import numpy as np
 
 
 class SelectiveDesensitization:
-    def __init__(self, pattern, window_size, range_size):
+    def __init__(self, pattern, input_num, range_num):
         #ランダムパターンを作る
         pattern_size = pattern.shape
-        random_pattern = np.empty((window_size, pattern_size[0], pattern_size[1]), dtype='int8')
+        random_pattern = np.empty((input_num, pattern_size[0], pattern_size[1]), dtype='int8')
         idx = np.arange(pattern_size[1])
 
-        for i in range(window_size):
+        for i in range(input_num):
             np.random.shuffle(idx)
             random_pattern[i] = np.copy(pattern[:, idx])
 
         self.p = pattern
         self.rp = random_pattern
-        self.ws = window_size
-        self.rs = range_size
+        self.ws = input_num
+        self.rs = range_num
 
     def forward(self, contexts):
         sd = np.ones((len(contexts), 1))
@@ -28,11 +28,11 @@ class SelectiveDesensitization:
                 in0r = self.rp[i][contexts[:, i]]
                 in1r = self.rp[j][contexts[:, j]]
 
-                sd0 = (1 + in1r) * in0
-                sd1 = (1 + in0r) * in1
+                sd0 = ((1 + in1r)//2) * in0
+                sd1 = ((1 + in0r)//2) * in1
 
-                sd0 = np.where((sd0 == 1) | (sd0 == -1), 0, sd0 / 2)
-                sd1 = np.where((sd1 == 1) | (sd1 == -1), 0, sd1 / 2)
+                # sd0 = np.where((sd0 == 1) | (sd0 == -1) | (sd0 == 0), 0, sd0 / 2)
+                # sd1 = np.where((sd1 == 1) | (sd1 == -1) | (sd0 == 0), 0, sd1 / 2)
 
                 sd = np.hstack((sd, sd0, sd1))
 
